@@ -8,18 +8,13 @@
 #include <iostream>
 
 class JPoint{
-  
-  
+ 
 };
 
 
 float distance(SDL_Point a,  SDL_Point b){
-  //std::cout << "distance " << abs(a.x - b.x) << "!!!!" << abs(a.y - b.y); 
   float f = sqrt(pow(abs(a.x - b.x), 2) + pow(abs(a.y - b.y), 2));
-  
-  //float f = 1;
-  //std::cout << "=====" << f << std::endl;
-
+  //std::cout << f << std::endl;
   return f;
 }
 
@@ -37,13 +32,14 @@ class JManager {
 	    m_K = 2;
 	}
 	
-        enum JColor {red,blue,green,yellow,unknown = 999};
+        enum JColor {red,blue,pink,yellow,green,unknown = 999};
 
 	
         void set_color(JColor c = unknown ) {
               switch (c) {
                 case red: SDL_SetRenderDrawColor(gRenderer,255,0,0,255); break;  
                 case blue: SDL_SetRenderDrawColor(gRenderer,0,0,255,255); break;
+                case pink: SDL_SetRenderDrawColor(gRenderer,255,0,255,255); break;
                 case green: SDL_SetRenderDrawColor(gRenderer,0,255,0,255); break;
                 case yellow: SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0x00, 0xFF ); break;
                 default:SDL_SetRenderDrawColor(gRenderer,0,0,0,255); break;
@@ -75,21 +71,22 @@ class JManager {
 	void draw_colored_class(JColor c, const std::vector<SDL_Point>& v) {
 	      if(v.empty()) return;
 	      set_color(c);
-              for(int i=0;i<=v.size();i++) SDL_RenderDrawPoint(gRenderer,v[i].x,v[i].y);
+              for(int i=0;i<v.size();i++) SDL_RenderDrawPoint(gRenderer,v[i].x,v[i].y);
 	}
 	
         void draw_classes() {
               draw_colored_class(unknown,m_all_points);
 	      draw_colored_class(green,m_pivot_points);
-	      for(int i=0;i<=m_K;i++) draw_colored_class(static_cast<JColor>(i), m_class2points[static_cast<JColor>(i)]);
+	      for(int i=0;i<m_K;i++) draw_colored_class(static_cast<JColor>(i), m_class2points[static_cast<JColor>(i)]);
         }
 
         void set_class(int ii) {
+	     //std::cout << "setting class "<< ii << std::endl;
              std::vector<SDL_Point> v;
-             std::vector<SDL_Point>::iterator i;
-	    
+           
 	     float gravity = 20.0;
-	     for(i = m_all_points.begin();i!=m_all_points.end();i++);
+	     std::vector<SDL_Point>::iterator i;
+	     for(i = m_all_points.begin();i!=m_all_points.end();i++)
                if ( distance(*i,m_pivot_points[ii]) < gravity ) v.push_back(*i);
 
              m_class2points[static_cast<JColor>(ii)] = v;
@@ -100,7 +97,7 @@ class JManager {
 	
 	
         void set_classes() {
-	    for(int i=0;i<=m_K;i++) set_class(i);
+	    for(int i=0;i<m_K;i++) set_class(i);
 	}
 
 
@@ -159,7 +156,7 @@ class JManager {
           m_all_points.push_back(p91);
 
 
-	  for(unsigned int i=0;i<=m_K;i++) 
+	  for(unsigned int i=0;i<m_K;i++) 
              m_pivot_points.push_back(m_all_points[rand()%m_all_points.size()]);
 	}
 

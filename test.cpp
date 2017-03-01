@@ -36,11 +36,8 @@ int main( int argc, char* args[] )
                 j.draw_classes();
                 
                 SDL_RenderPresent( gRenderer );
-
- 
         }
 
         close();
-
         return 0;
 }
