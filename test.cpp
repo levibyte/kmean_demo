@@ -16,9 +16,9 @@ int main( int argc, char* args[] )
 
         bool quit = false;
         SDL_Event e;
-        JManager j;
+        JManager* j = new JManager;
 
-        j.init_data();
+        j->init_data();
        
         SDL_RenderSetScale(gRenderer,6.0,6.0);
        
@@ -27,13 +27,19 @@ int main( int argc, char* args[] )
                 while( SDL_PollEvent( &e ) != 0 )
                 {
                         if( e.type == SDL_QUIT ) quit = true;
-                        if( e.type == SDL_MOUSEBUTTONDOWN ) j.set_classes();
+                        //if( e.type == SDL_MOUSEBUTTONDOWN ) j->set_classes();
+                        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                            delete j; //->init_data();
+                            j = new JManager;
+                            j->init_data();
+                            //j->set_classes();
+                        }
                 } 
  
                 SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
                 SDL_RenderClear( gRenderer );
-               
-                j.draw_classes();
+                j->set_classes();
+                j->draw_classes();
                 
                 SDL_RenderPresent( gRenderer );
         }
