@@ -1,23 +1,12 @@
 #include "init.h"
 
+#include <set>
 #include <map>
 #include <vector>
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
 #include <iostream>
-
-class JPoint{
- 
-};
-
-
-float distance(SDL_Point a,  SDL_Point b){
-  float f = sqrt(pow(abs(a.x - b.x), 2) + pow(abs(a.y - b.y), 2));
-  //std::cout << f << std::endl;
-  return f;
-}
-
 
 bool operator<(const SDL_Point &lhs, const SDL_Point &rhs) {
     return (lhs.x < rhs.x) || ((lhs.x == rhs.x) && (lhs.y < rhs.y));
@@ -29,7 +18,10 @@ class JManager {
   public:  
     
 	JManager() {
-	    m_K = 2;
+	    m_K = 3;
+            m_converge_flags.resize(m_K);
+             //std::vector<SDL_Point> v;
+             for(int i=0;i<m_K;i++){ m_converge_flags[i] = false; std::vector<SDL_Point> v; m_class2points[static_cast<JColor>(i)] = v; }
 	}
 	
         enum JColor {red,blue,pink,yellow,green,unknown = 999};
@@ -47,10 +39,13 @@ class JManager {
         }
 
 
+        float distance(const SDL_Point& a, const SDL_Point& b){
+          return sqrt(pow(abs(a.x - b.x), 2) + pow(abs(a.y - b.y), 2));
+        }
 
 
-        SDL_Point get_centroid(std::vector<SDL_Point> v) {
-              //assert(!v.empty());
+        SDL_Point get_centroid(const std::vector<SDL_Point>& v) {
+              assert(!v.empty());
               SDL_Point centroid;
               
               int x = 0; 
@@ -66,104 +61,134 @@ class JManager {
               return centroid;
         }
         
-//        
 
 	void draw_colored_class(JColor c, const std::vector<SDL_Point>& v) {
 	      if(v.empty()) return;
 	      set_color(c);
-              for(int i=0;i<v.size();i++) SDL_RenderDrawPoint(gRenderer,v[i].x,v[i].y);
+              SDL_RenderDrawPoints(gRenderer,&(v[0]),v.size());
+              //std::cout << static_cast<int>(c) << " " << v.size() << std::endl;
+              //for(int i=0;i<v.size();i++) SDL_RenderDrawPoint(gRenderer,v[i].x,v[i].y);
 	}
 	
-        void draw_classes() {
-              draw_colored_class(unknown,m_all_points);
-	      draw_colored_class(green,m_pivot_points);
-	      for(int i=0;i<m_K;i++) draw_colored_class(static_cast<JColor>(i), m_class2points[static_cast<JColor>(i)]);
-        }
-
         void set_class(int ii) {
-	     //std::cout << "setting class "<< ii << std::endl;
-             std::vector<SDL_Point> v;
-           
-	     float gravity = 20.0;
+             std::vector<SDL_Point> v = m_class2points[static_cast<JColor>(ii)];
+             //m_all_points.push_back(p);
+             
+             
+	     //float gravity = 10.0;
 	     std::vector<SDL_Point>::iterator i;
 	     for(i = m_all_points.begin();i!=m_all_points.end();i++)
-               if ( distance(*i,m_pivot_points[ii]) < gravity ) v.push_back(*i);
+               if ( distance(*i,m_pivot_points[ii]) < m_gravity ){
+                if ( m_seen_points.find(*i) == m_seen_points.end() ) {
+                  m_seen_points.insert(*i);
+                  v.push_back(*i);
+                }
+               }
 
              m_class2points[static_cast<JColor>(ii)] = v;
-              
-              if (!v.empty())
-                m_pivot_points[ii] = get_centroid(v);
+             //assert(!v.empty());
+              if (!v.empty()) {
+                SDL_Point l = m_pivot_points[ii];
+                SDL_Point n = get_centroid(v);
+                if ( l.x == n.x && l.y == n.y )
+                  //m_pivot_points[ii] = get_centroid(v);
+                  m_converge_flags[ii] = true;
+                else
+                  m_pivot_points[ii] = get_centroid(v);
+              }
 	}
 	
-	
+
+        void draw_classes() {
+              draw_colored_class(unknown,m_all_points);
+              draw_colored_class(green,m_pivot_points);
+              for(int i=0;i<m_K;i++) draw_colored_class(static_cast<JColor>(i), m_class2points[static_cast<JColor>(i)]);
+        }
+
         void set_classes() {
-	    for(int i=0;i<m_K;i++) set_class(i);
+              for(int i=0;i<m_K;i++) set_class(i);
 	}
 
 
+        bool is_all_converged() {
+              bool res;
+              for(int i=0;i<m_K;i++) res = res & m_converge_flags[i];
+        }
+        
+        bool is_done ( ) { return m_seen_points.size() == m_all_points.size(); }
+        
+        void classify() {
+            //if ( !is_done() && is_all_converged() ) {
+            //  create_pivot_points();
+            //}
+            set_classes();
+        }
+        
+        void classify_and_draw() {
+            classify();
+            draw_classes();
+        }
+        
         void init_data() {
-	  /* 
-          for(unsigned int i=0;i<10;i++) {
-             SDL_Point p;
-             p.x=rand()%100;
-             p.y=rand()%100;
+	  /// 
+          for(unsigned int i=0;i<300;i++) {
+             //SDL_Point p;
+             SDL_Point p,p2,p3;
+             p.x=rand()%20;
+             p.y=rand()%20;
+             
+             p2.x = p.x + 15;
+             p2.y = p.y + 15;
+             
+             p3.x = p2.x + 30  ;
+             p3.y = p2.y + 30;
+             
              m_all_points.push_back(p);
-           }
-          /**/
-	  
-          SDL_Point p7 = { 10 , 30 };
-          SDL_Point p8 = { 15 , 30 };
-          SDL_Point p9 = { 20 , 30 };
-          SDL_Point p4 = { 10 , 20 };
-          SDL_Point p5 = { 15 , 20 };
-          SDL_Point p6 = { 20 , 20 };
-          SDL_Point p1 = { 10 , 10 };
-          SDL_Point p2 = { 15 , 10 };
-          SDL_Point p3 = { 20 , 10 };
+             m_all_points.push_back(p2);
+             m_all_points.push_back(p3);
+            }
+           
+          m_gravity = 0;
+          int segs = 0;
+          for(std::vector<SDL_Point>::iterator i = m_all_points.begin();i!=m_all_points.end();i++)
+            for(std::vector<SDL_Point>::iterator j = m_all_points.begin();j!=m_all_points.end();j++) {
+              if ( i != j ) {
+                segs++;
+                //std::cout << distance(*i,*j) << std::endl;
+                m_gravity = m_gravity + distance(*i,*j);
+              }
+            }
+              
+              
+          m_gravity = m_gravity/segs;
+          m_gravity = m_gravity - m_gravity/2;
+          //std::cout << segs << "   " << m_gravity << std::endl;
+          //assert(0);
           
-          
-          m_all_points.push_back(p1);
-          m_all_points.push_back(p2);
-          m_all_points.push_back(p3);
-          m_all_points.push_back(p4);
-          m_all_points.push_back(p5);
-          m_all_points.push_back(p6);
-          m_all_points.push_back(p7);
-          m_all_points.push_back(p8);
-          m_all_points.push_back(p9);
-          
-          
-               
-          SDL_Point p71 = { 25 , 40 };
-          SDL_Point p81 = { 30 , 40 };
-          SDL_Point p91 = { 35 , 40 };
-          SDL_Point p41 = { 25 , 50 };
-          SDL_Point p51 = { 30 , 50 };
-          SDL_Point p61 = { 35 , 50 };
-          SDL_Point p11 = { 25 , 60 };
-          SDL_Point p21 = { 30 , 60 };
-          SDL_Point p31 = { 35 , 60 };
-          
-                   
-          m_all_points.push_back(p11);
-          m_all_points.push_back(p21);
-          m_all_points.push_back(p31);
-          m_all_points.push_back(p41);
-          m_all_points.push_back(p51);
-          m_all_points.push_back(p61);
-          m_all_points.push_back(p71);
-          m_all_points.push_back(p81);
-          m_all_points.push_back(p91);
+          create_pivot_points();
+	
+         
+        }
+       
+       void create_pivot_points() {
+            if (! m_pivot_points.empty() ) m_pivot_points.erase(m_pivot_points.begin(),m_pivot_points.end());
+            for(unsigned int i=0;i<m_K;i++) {
+             //SDL_Point p;
+             //p.x=rand()%100;
+             //p.y=rand()%100;
+             //m_pivot_points.push_back(p);
 
-
-	  for(unsigned int i=0;i<m_K;i++) 
              m_pivot_points.push_back(m_all_points[rand()%m_all_points.size()]);
-	}
-
+          }
+         
+       }
 	
   private:
           int m_K;
+          float m_gravity;
 	  std::map<JColor,std::vector<SDL_Point> > m_class2points;
+          std::set<SDL_Point> m_seen_points;
+          std::vector<bool> m_converge_flags;
           std::vector<SDL_Point> m_all_points;
 	  std::vector<SDL_Point> m_pivot_points;
 };
