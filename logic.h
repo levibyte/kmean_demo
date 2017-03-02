@@ -19,9 +19,8 @@ class JManager {
     
 	JManager() {
 	    m_K = 3;
-            m_converge_flags.resize(m_K);
              //std::vector<SDL_Point> v;
-             for(int i=0;i<m_K;i++){ m_converge_flags[i] = false; std::vector<SDL_Point> v; m_class2points[static_cast<JColor>(i)] = v; }
+             for(int i=0;i<m_K;i++){ std::vector<SDL_Point> v; m_class2points[static_cast<JColor>(i)] = v; }
 	}
 	
         enum JColor {red,blue,pink,yellow,green,unknown = 999};
@@ -75,13 +74,10 @@ class JManager {
              //m_all_points.push_back(p);
              
              
-	     //float gravity = 10.0;
 	     std::vector<SDL_Point>::iterator i;
 	     for(i = m_all_points.begin();i!=m_all_points.end();i++)
-               if ( distance(*i,m_pivot_points[ii]) < m_gravity ){
-                if ( m_seen_points.find(*i) == m_seen_points.end() ) {
-                  m_seen_points.insert(*i);
                   v.push_back(*i);
+                //}
                 }
                }
 
@@ -137,6 +133,12 @@ class JManager {
              p.x=rand()%20;
              p.y=rand()%20;
              
+             p2.x = p.x + 30;
+             p2.y = p.y + 30;
+             
+             p3.x = p2.x + 30;
+             p3.y = p2.y + 30;
+             
              p2.x = p.x + 15;
              p2.y = p.y + 15;
              
@@ -146,33 +148,7 @@ class JManager {
              m_all_points.push_back(p);
              m_all_points.push_back(p2);
              m_all_points.push_back(p3);
-            }
-           
-          m_gravity = 0;
-          int segs = 0;
-          for(std::vector<SDL_Point>::iterator i = m_all_points.begin();i!=m_all_points.end();i++)
-            for(std::vector<SDL_Point>::iterator j = m_all_points.begin();j!=m_all_points.end();j++) {
-              if ( i != j ) {
-                segs++;
-                //std::cout << distance(*i,*j) << std::endl;
-                m_gravity = m_gravity + distance(*i,*j);
-              }
-            }
-              
-              
-          m_gravity = m_gravity/segs;
-          m_gravity = m_gravity - m_gravity/2;
-          //std::cout << segs << "   " << m_gravity << std::endl;
-          //assert(0);
-          
-          create_pivot_points();
-	
-         
-        }
-       
-       void create_pivot_points() {
-            if (! m_pivot_points.empty() ) m_pivot_points.erase(m_pivot_points.begin(),m_pivot_points.end());
-            for(unsigned int i=0;i<m_K;i++) {
+	  for(unsigned int i=0;i<m_K;i++) {
              //SDL_Point p;
              //p.x=rand()%100;
              //p.y=rand()%100;
@@ -181,7 +157,6 @@ class JManager {
              m_pivot_points.push_back(m_all_points[rand()%m_all_points.size()]);
           }
          
-       }
 	
   private:
           int m_K;
