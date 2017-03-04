@@ -20,7 +20,12 @@ class JManager {
 	JManager() {
 	    m_K = 3;
              //std::vector<SDL_Point> v;
-             for(int i=0;i<m_K;i++){ std::vector<SDL_Point> v; m_class2points[static_cast<JColor>(i)] = v; }
+	    m_converge_flags.resize(m_K);
+             for(int i=0;i<m_K;i++){ 
+	       std::vector<SDL_Point> v; 
+	       m_class2points[static_cast<JColor>(i)] = v; 
+	       m_converge_flags[i] = false;
+	    }
 	}
 	
         enum JColor {red,blue,pink,yellow,green,unknown = 999};
@@ -73,13 +78,13 @@ class JManager {
              std::vector<SDL_Point> v = m_class2points[static_cast<JColor>(ii)];
              //m_all_points.push_back(p);
              
-             
+             m_gravity = 10;
 	     std::vector<SDL_Point>::iterator i;
 	     for(i = m_all_points.begin();i!=m_all_points.end();i++)
-                  v.push_back(*i);
+                  if( distance(*i,m_pivot_points[ii]) < m_gravity ) v.push_back(*i);
                 //}
-                }
-               }
+                //}
+               //}
 
              m_class2points[static_cast<JColor>(ii)] = v;
              //assert(!v.empty());
@@ -139,24 +144,25 @@ class JManager {
              p3.x = p2.x + 30;
              p3.y = p2.y + 30;
              
-             p2.x = p.x + 15;
-             p2.y = p.y + 15;
-             
-             p3.x = p2.x + 30  ;
-             p3.y = p2.y + 30;
              
              m_all_points.push_back(p);
              m_all_points.push_back(p2);
              m_all_points.push_back(p3);
-	  for(unsigned int i=0;i<m_K;i++) {
+	  }
+	  
+	  create_pivot_points();
+	  
+	}
+         
+         void create_pivot_points() {
+	    for(unsigned int i=0;i<m_K;i++) {
              //SDL_Point p;
              //p.x=rand()%100;
              //p.y=rand()%100;
              //m_pivot_points.push_back(p);
-
              m_pivot_points.push_back(m_all_points[rand()%m_all_points.size()]);
           }
-         
+	 }
 	
   private:
           int m_K;
