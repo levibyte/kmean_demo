@@ -10,16 +10,16 @@ Overall algorithm's yield is **very much** depends on data distribution ( are th
 
 *Left:* raw data, *Right:* after classification to buckets ( via color )
 
-<img src="https://i.ibb.co/WtHJXg6/kmeans3.png" width="390" height="400"> <img src="https://i.ibb.co/4777pTb/kmeans4.png" width="390" height="400">
+<img src="https://i.ibb.co/WtHJXg6/kmeans3.png" width="390" height="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://i.ibb.co/4777pTb/kmeans4.png" width="390" height="400">
 
 
 Same, but for larger gravity values: 
 
-<img src="https://i.ibb.co/QdN6s8s/kmeans-1.png" width="390" height="400"> <img src="https://i.ibb.co/jrXx4YX/kmeans2.png" width="390" height="400">
+<img src="https://i.ibb.co/QdN6s8s/kmeans-1.png" width="390" height="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://i.ibb.co/jrXx4YX/kmeans2.png" width="390" height="400">
 
 Fail case: 
 
-<img src="https://i.ibb.co/wd3WdYL/kmeans5.png" width="390" height="400"> <img src="https://i.ibb.co/ssfwrW6/kmeans6.png" width="390" height="400">
+<img src="https://i.ibb.co/wd3WdYL/kmeans5.png" width="390" height="400">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://i.ibb.co/ssfwrW6/kmeans6.png" width="390" height="400">
 
 
 
