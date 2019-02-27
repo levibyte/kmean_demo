@@ -1,9 +1,9 @@
 # kmean_demo
-Just a simple implementation of the most basic classification algorithm.
-The question is following: Given K number and data, classify and put data into K buckets.
-for simplicty and visbility reasons I've choosen data to be 2d points on the surface.
+The question is following: Given number K and data, classify and put data into K buckets.
+This is silly atempt address this question by implementing k-means. the most basic classification algorithm. For simplicty and visbility reasons I've choosen data to be 2d points on the surface.
 
-Overall algorithms yield is **very much** dependened on inital data ( are they allready split into K buckets or spread randomly?) and on the choice of first pivot points. Given said that, on some occasions it can split data ideally and for some can be completly wrong.
+
+Overall algorithms yield is **very much** depends on data distribution ( are they allready "split" into K buckets or spread randomly?) and on the choice of first pivot points. Given said that, on some occasions it can split data ideally and for some can be completly wrong.
 
 
 ### Run examples
