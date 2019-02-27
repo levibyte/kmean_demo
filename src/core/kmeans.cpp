@@ -32,9 +32,9 @@ void KMeansAlgo::draw_classes() {
 
 void KMeansAlgo::assign_classes() {
     //TODO: while(!is_all_converged())
-      for(int j=0;j<40; ++j)  
         for(int i=0;i<m_K;i++) 
-            set_class(i);
+            for(int j=0;j<40; ++j)  
+                set_class(i);
 }
 
 
