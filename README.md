@@ -19,7 +19,7 @@ Same, but for larger gravity values:
 
 Fail case: 
 
-<img src="https://i.ibb.co/QdN6s8s/kmeans-1.png" width="390" height="500"> <img src="https://i.ibb.co/jrXx4YX/kmeans2.png" width="390" height="500">
+<img src="https://i.ibb.co/wd3WdYL/kmeans5.png" width="390" height="500"> <img src="https://i.ibb.co/ssfwrW6/kmeans6.png" width="390" height="500">
 
 
 
