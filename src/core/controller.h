@@ -17,10 +17,12 @@ class Controller: public LeSdlRenderer
     void create_nice_data() {
         //creating data that is distributed nicely
         for(unsigned int i=0;i<300;i++) {
-            LePoint p(rand()%20,rand()%20),p2(p.x()+30,p.y()+30),p3(p2.x()+30,p2.y()+30);
+            LePoint p(rand()%20,rand()%20),p2(p.x()+rand()%30,p.y()+rand()%30),p3(p2.x()+rand()%30,p2.y()+rand()%30),p4(p.x()+70, p.y()+70);
             j->add_new_point(p);
             j->add_new_point(p2);
             j->add_new_point(p3);
+            j->add_new_point(p4);
+            
         }
         j->init();
     }

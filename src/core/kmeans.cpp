@@ -44,7 +44,7 @@ void KMeansAlgo::draw_colored_class(LeColor c, const std::vector<LePoint>& v) {
     
     set_color(c);
     for ( int i=0; i<v.size(); ++i)
-        m_renderer->draw_point(v[i].x(),v[i].y());
+        m_renderer->draw_point(v[i].y(),v[i].x());
         
     //draw_points(&(v[0]),v.size());
 }
