@@ -16,13 +16,14 @@ public:
     
     KMeansAlgo(LeRenderingControllerImplBase* renderer, unsigned int k, unsigned int gravity);
     void init();     
-    void add_new_point();
+    void add_new_point(const LePoint& p);
     void classify_and_draw();
     void assign_classes();
     void draw_classes();
 
     //bool is_accepting();
 
+    //TODO: move to renderer
     enum LeColor {red,blue,pink,yellow,green,unknown = 999};
 
     void set_color(LeColor c = unknown ) {

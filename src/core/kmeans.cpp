@@ -10,20 +10,12 @@ KMeansAlgo::KMeansAlgo(LeRenderingControllerImplBase* renderer, unsigned int k, 
 }
 
 void KMeansAlgo::init() {
-    //* 
-    for(unsigned int i=0;i<300;i++) {
-        LePoint p(rand()%20,rand()%20),p2(p.x()+30,p.y()+30),p3(p2.x()+30,p2.y()+30);
-        m_all_points.push_back(p);
-        m_all_points.push_back(p2);
-        m_all_points.push_back(p3);
-    }
-    /**/
     create_pivot_points();
 }
 
-void KMeansAlgo::add_new_point() {
-
-    
+void KMeansAlgo::add_new_point(const LePoint& p) {
+    //LePoint p(x,y);
+    m_all_points.push_back(p);
 }
 
 void KMeansAlgo::classify_and_draw() {
@@ -39,7 +31,7 @@ void KMeansAlgo::draw_classes() {
 }
 
 void KMeansAlgo::assign_classes() {
-    //while(!is_all_converged())
+    //TODO: while(!is_all_converged())
       for(int j=0;j<40; ++j)  
         for(int i=0;i<m_K;i++) 
             set_class(i);
@@ -73,12 +65,12 @@ void KMeansAlgo::set_class(int ii) {
             m_converge_flags[ii] = true;
         else
             m_pivot_points[ii] = LePoint::get_centroid(v);
-        }
+    }
 }
 
 
 bool KMeansAlgo::is_all_converged() {
-    bool res;
+    bool res = false;
     for(int i=0;i<m_K;i++) 
         res = res & m_converge_flags[i];
     
