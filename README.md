@@ -1,4 +1,4 @@
-# kmean_demo
+# kmeans_demo
 The question is following: Given number K and some data, classify and put data into K buckets.
 
 This is silly atempt to address this question by implementing k-means, the most basic classification algorithm. For simplicty and visbility reasons I've choosen data to be 2d points on the surface.
